@@ -1,13 +1,15 @@
 import React, { useRef } from 'react';
-import { AlertTriangle, CheckCircle, Download } from 'lucide-react';
+import { AlertTriangle, CheckCircle, Download, Maximize2 } from 'lucide-react';
 import { toPng } from 'html-to-image';
 import { Card, CardHeader, CardTitle, CardContent } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { EditableText } from '../ui/EditableText';
+import { Modal } from '../ui/Modal';
 
 export const GapAnalysis = ({ gapData, title, onTitleChange }) => {
     const criticalGaps = gapData.filter(g => g.priority === 'Critical');
     const cardRef = useRef(null);
+    const [isExpanded, setIsExpanded] = React.useState(false);
 
     const handleExport = async () => {
         if (cardRef.current) {
@@ -26,68 +28,84 @@ export const GapAnalysis = ({ gapData, title, onTitleChange }) => {
         }
     };
 
-    return (
-        <Card className="h-full" ref={cardRef}>
-            <CardHeader className="flex flex-row items-center justify-between">
-                <div className="flex items-center gap-4">
-                    <CardTitle>
-                        <EditableText value={title} onChange={onTitleChange} />
-                    </CardTitle>
-                    <div className="flex items-center gap-2">
-                        <span className="px-2 py-1 bg-red-500/10 text-red-600 dark:text-red-400 text-xs font-medium rounded-full border border-red-500/20">
-                            {criticalGaps.length} Critical
-                        </span>
+    const gapContent = (
+        <div className="space-y-3 max-h-[500px] overflow-y-auto custom-scrollbar pr-2">
+            {gapData.map((item, i) => (
+                <div key={i} className="flex items-center gap-4 p-4 rounded-lg bg-slate-100 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 transition-colors group">
+                    <div className={`p-2 rounded-lg ${item.priority === 'Critical' ? 'bg-red-500/10 text-red-600 dark:text-red-400' :
+                        item.priority === 'High' ? 'bg-orange-500/10 text-orange-600 dark:text-orange-400' :
+                            'bg-yellow-500/10 text-yellow-600 dark:text-yellow-400'
+                        }`}>
+                        <AlertTriangle className="w-5 h-5" />
+                    </div>
+
+                    <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between mb-1">
+                            <h4 className="text-sm font-medium text-slate-900 dark:text-slate-200 truncate">{item.capability}</h4>
+                            <span className={`text-xs font-bold ${item.priority === 'Critical' ? 'text-red-600 dark:text-red-400' :
+                                item.priority === 'High' ? 'text-orange-600 dark:text-orange-400' : 'text-yellow-600 dark:text-yellow-400'
+                                }`}>
+                                -{item.gap}% Gap
+                            </span>
+                        </div>
+                        <div className="flex items-center justify-between text-xs text-slate-600 dark:text-slate-500">
+                            <span>{item.domain}</span>
+                            <div className="flex items-center gap-2">
+                                <span>Current: {item.current}%</span>
+                                <span>Target: {item.target}%</span>
+                            </div>
+                        </div>
+                        <div className="mt-2 w-full h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+                            <div
+                                className="h-full bg-slate-400 dark:bg-slate-600 rounded-full"
+                                style={{ width: `${item.current}%` }}
+                            />
+                        </div>
                     </div>
                 </div>
-                <Button variant="ghost" size="icon" onClick={handleExport} title="Export as PNG" className="export-exclude">
-                    <Download className="w-4 h-4 text-slate-400" />
-                </Button>
-            </CardHeader>
-            <CardContent>
-                <div className="space-y-3 max-h-[500px] overflow-y-auto custom-scrollbar pr-2">
-                    {gapData.map((item, i) => (
-                        <div key={i} className="flex items-center gap-4 p-4 rounded-lg bg-slate-100 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 transition-colors group">
-                            <div className={`p-2 rounded-lg ${item.priority === 'Critical' ? 'bg-red-500/10 text-red-600 dark:text-red-400' :
-                                item.priority === 'High' ? 'bg-orange-500/10 text-orange-600 dark:text-orange-400' :
-                                    'bg-yellow-500/10 text-yellow-600 dark:text-yellow-400'
-                                }`}>
-                                <AlertTriangle className="w-5 h-5" />
-                            </div>
+            ))}
 
-                            <div className="flex-1 min-w-0">
-                                <div className="flex items-center justify-between mb-1">
-                                    <h4 className="text-sm font-medium text-slate-900 dark:text-slate-200 truncate">{item.capability}</h4>
-                                    <span className={`text-xs font-bold ${item.priority === 'Critical' ? 'text-red-600 dark:text-red-400' :
-                                        item.priority === 'High' ? 'text-orange-600 dark:text-orange-400' : 'text-yellow-600 dark:text-yellow-400'
-                                        }`}>
-                                        -{item.gap}% Gap
-                                    </span>
-                                </div>
-                                <div className="flex items-center justify-between text-xs text-slate-600 dark:text-slate-500">
-                                    <span>{item.domain}</span>
-                                    <div className="flex items-center gap-2">
-                                        <span>Current: {item.current}%</span>
-                                        <span>Target: {item.target}%</span>
-                                    </div>
-                                </div>
-                                <div className="mt-2 w-full h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
-                                    <div
-                                        className="h-full bg-slate-400 dark:bg-slate-600 rounded-full"
-                                        style={{ width: `${item.current}%` }}
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-
-                    {gapData.length === 0 && (
-                        <div className="flex flex-col items-center justify-center py-12 text-slate-500">
-                            <CheckCircle className="w-12 h-12 mb-3 text-emerald-500/50" />
-                            <p>No critical gaps identified.</p>
-                        </div>
-                    )}
+            {gapData.length === 0 && (
+                <div className="flex flex-col items-center justify-center py-12 text-slate-500">
+                    <CheckCircle className="w-12 h-12 mb-3 text-emerald-500/50" />
+                    <p>No critical gaps identified.</p>
                 </div>
-            </CardContent>
-        </Card>
+            )}
+        </div>
+    );
+
+    return (
+        <>
+            <Card className="h-full" ref={cardRef}>
+                <CardHeader className="flex flex-row items-center justify-between">
+                    <div className="flex items-center gap-4">
+                        <CardTitle>
+                            <EditableText value={title} onChange={onTitleChange} />
+                        </CardTitle>
+                        <div className="flex items-center gap-2">
+                            <span className="px-2 py-1 bg-red-500/10 text-red-600 dark:text-red-400 text-xs font-medium rounded-full border border-red-500/20">
+                                {criticalGaps.length} Critical
+                            </span>
+                        </div>
+                    </div>
+                    <div className="flex gap-2">
+                        <Button variant="ghost" size="icon" onClick={() => setIsExpanded(true)} title="Expand" className="export-exclude">
+                            <Maximize2 className="w-4 h-4 text-slate-400" />
+                        </Button>
+                        <Button variant="ghost" size="icon" onClick={handleExport} title="Export as PNG" className="export-exclude">
+                            <Download className="w-4 h-4 text-slate-400" />
+                        </Button>
+                    </div>
+                </CardHeader>
+                <CardContent>
+                    {gapContent}
+                </CardContent>
+            </Card>
+            <Modal isOpen={isExpanded} onClose={() => setIsExpanded(false)} title={title} size="xlarge">
+                <div style={{ maxHeight: '70vh' }}>
+                    {gapContent}
+                </div>
+            </Modal>
+        </>
     );
 };

@@ -1,9 +1,10 @@
 import React, { useRef } from 'react';
 import { toPng } from 'html-to-image';
-import { Download } from 'lucide-react';
+import { Download, Maximize2 } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { EditableText } from '../ui/EditableText';
+import { Modal } from '../ui/Modal';
 import { getScoreColor, getMaturityLevel, formatLabel } from '../../utils/helpers';
 import { COLORS, MATURITY_LEVELS } from '../../data/constants';
 
@@ -80,6 +81,7 @@ const Gauge = ({ value, size = 180, label }) => {
 
 export const DomainGauges = ({ domainScores, title, onTitleChange }) => {
     const containerRef = useRef(null);
+    const [isExpanded, setIsExpanded] = React.useState(false);
 
     const handleExport = async () => {
         if (containerRef.current) {
@@ -98,44 +100,58 @@ export const DomainGauges = ({ domainScores, title, onTitleChange }) => {
         }
     };
 
-    return (
-        <div ref={containerRef} className="bg-white dark:bg-slate-950/50 p-4 rounded-xl border border-slate-200 dark:border-slate-800">
-            <div className="flex items-center justify-between mb-6 px-2">
-                <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
-                    <EditableText value={title} onChange={onTitleChange} />
-                </h3>
-                <Button variant="ghost" size="icon" onClick={handleExport} title="Export as PNG" className="export-exclude">
-                    <Download className="w-4 h-4 text-slate-400" />
-                </Button>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {Object.entries(domainScores).map(([key, domain]) => (
-                    <Card key={key} className="bg-slate-50 dark:bg-slate-900/40">
-                        <CardContent className="p-6 flex flex-col items-center">
-                            <Gauge value={domain.score} label={domain.name} />
-                            <div className="w-full mt-6 space-y-3">
-                                {Object.entries(domain.subdomains).map(([subKey, value]) => (
-                                    <div key={subKey} className="flex items-center gap-3">
-                                        <span className="text-xs text-slate-700 dark:text-slate-400 w-32 truncate">
-                                            {formatLabel(subKey)}
-                                        </span>
-                                        <div className="flex-1 h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
-                                            <div
-                                                className="h-full rounded-full transition-all duration-500"
-                                                style={{
-                                                    width: `${value}%`,
-                                                    backgroundColor: getScoreColor(value)
-                                                }}
-                                            />
-                                        </div>
-                                        <span className="text-xs font-medium text-slate-800 dark:text-slate-300 w-8 text-right">{value}%</span>
+    const gaugeContent = (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {Object.entries(domainScores).map(([key, domain]) => (
+                <Card key={key} className="bg-slate-50 dark:bg-slate-900/40">
+                    <CardContent className="p-6 flex flex-col items-center">
+                        <Gauge value={domain.score} label={domain.name} />
+                        <div className="w-full mt-6 space-y-3">
+                            {Object.entries(domain.subdomains).map(([subKey, value]) => (
+                                <div key={subKey} className="flex items-center gap-3">
+                                    <span className="text-xs text-slate-700 dark:text-slate-400 w-32 truncate">
+                                        {formatLabel(subKey)}
+                                    </span>
+                                    <div className="flex-1 h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+                                        <div
+                                            className="h-full rounded-full transition-all duration-500"
+                                            style={{
+                                                width: `${value}%`,
+                                                backgroundColor: getScoreColor(value)
+                                            }}
+                                        />
                                     </div>
-                                ))}
-                            </div>
-                        </CardContent>
-                    </Card>
-                ))}
-            </div>
+                                    <span className="text-xs font-medium text-slate-800 dark:text-slate-300 w-8 text-right">{value}%</span>
+                                </div>
+                            ))}
+                        </div>
+                    </CardContent>
+                </Card>
+            ))}
         </div>
+    );
+
+    return (
+        <>
+            <div ref={containerRef} className="bg-white dark:bg-slate-950/50 p-4 rounded-xl border border-slate-200 dark:border-slate-800">
+                <div className="flex items-center justify-between mb-6 px-2">
+                    <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
+                        <EditableText value={title} onChange={onTitleChange} />
+                    </h3>
+                    <div className="flex gap-2">
+                        <Button variant="ghost" size="icon" onClick={() => setIsExpanded(true)} title="Expand" className="export-exclude">
+                            <Maximize2 className="w-4 h-4 text-slate-400" />
+                        </Button>
+                        <Button variant="ghost" size="icon" onClick={handleExport} title="Export as PNG" className="export-exclude">
+                            <Download className="w-4 h-4 text-slate-400" />
+                        </Button>
+                    </div>
+                </div>
+                {gaugeContent}
+            </div>
+            <Modal isOpen={isExpanded} onClose={() => setIsExpanded(false)} title={title} size="full">
+                {gaugeContent}
+            </Modal>
+        </>
     );
 };
