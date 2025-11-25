@@ -1,14 +1,16 @@
 import React, { useRef } from 'react';
 import { ResponsiveRadar } from '@nivo/radar';
 import { toPng } from 'html-to-image';
-import { Download } from 'lucide-react';
+import { Download, Maximize2 } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { EditableText } from '../ui/EditableText';
+import { Modal } from '../ui/Modal';
 import { COLORS } from '../../data/constants';
 
 export const RadarAnalysis = ({ radarData, title, onTitleChange }) => {
     const cardRef = useRef(null);
+    const [isExpanded, setIsExpanded] = React.useState(false);
 
     const handleExport = async () => {
         if (cardRef.current) {
@@ -27,33 +29,32 @@ export const RadarAnalysis = ({ radarData, title, onTitleChange }) => {
         }
     };
 
-    // Transform data for Nivo if necessary, but the current format should work with indexBy="fullName"
-    // Keys: score, benchmark, topPerformer
-
     const theme = {
-        textColor: '#94a3b8',
-        fontSize: 12,
         axis: {
-            domain: {
-                line: {
-                    stroke: '#334155',
-                    strokeWidth: 1
+            ticks: {
+                text: {
+                    fill: '#94a3b8',
+                    fontSize: 11
                 }
             },
-            ticks: {
-                line: {
-                    stroke: '#334155',
-                    strokeWidth: 1
-                },
+            legend: {
                 text: {
-                    fill: '#94a3b8'
+                    fill: '#cbd5e1',
+                    fontSize: 12,
+                    fontWeight: 600
                 }
             }
         },
         grid: {
             line: {
-                stroke: '#334155',
+                stroke: '#1e293b',
                 strokeWidth: 1
+            }
+        },
+        legends: {
+            text: {
+                fill: '#94a3b8',
+                fontSize: 11
             }
         },
         tooltip: {
@@ -68,57 +69,73 @@ export const RadarAnalysis = ({ radarData, title, onTitleChange }) => {
         }
     };
 
-    return (
-        <Card className="h-full" ref={cardRef}>
-            <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle>
-                    <EditableText value={title} onChange={onTitleChange} />
-                </CardTitle>
-                <Button variant="ghost" size="icon" onClick={handleExport} title="Export as PNG" className="export-exclude">
-                    <Download className="w-4 h-4 text-slate-400" />
-                </Button>
-            </CardHeader>
-            <CardContent>
-                <div className="h-[400px] w-full">
-                    <ResponsiveRadar
-                        data={radarData}
-                        keys={['score', 'benchmark', 'topPerformer']}
-                        indexBy="fullName"
-                        valueFormat=">-.2f"
-                        margin={{ top: 70, right: 80, bottom: 40, left: 80 }}
-                        borderColor={{ from: 'color' }}
-                        gridLabelOffset={36}
-                        dotSize={10}
-                        dotColor={{ theme: 'background' }}
-                        dotBorderWidth={2}
-                        colors={[COLORS.primary, COLORS.warning, COLORS.success]}
-                        blendMode="multiply"
-                        motionConfig="wobbly"
-                        legends={[
-                            {
-                                anchor: 'top-left',
-                                direction: 'column',
-                                translateX: -50,
-                                translateY: -40,
-                                itemWidth: 80,
-                                itemHeight: 20,
-                                itemTextColor: '#94a3b8',
-                                symbolSize: 12,
-                                symbolShape: 'circle',
-                                effects: [
-                                    {
-                                        on: 'hover',
-                                        style: {
-                                            itemTextColor: '#f1f5f9'
-                                        }
-                                    }
-                                ]
+    const radarChart = (
+        <ResponsiveRadar
+            data={radarData}
+            keys={['score', 'benchmark', 'topPerformer']}
+            indexBy="fullName"
+            valueFormat=">-.2f"
+            margin={{ top: 70, right: 80, bottom: 40, left: 80 }}
+            borderColor={{ from: 'color' }}
+            gridLabelOffset={36}
+            dotSize={10}
+            dotColor={{ theme: 'background' }}
+            dotBorderWidth={2}
+            colors={[COLORS.primary, COLORS.warning, COLORS.success]}
+            blendMode="multiply"
+            motionConfig="wobbly"
+            legends={[
+                {
+                    anchor: 'top-left',
+                    direction: 'column',
+                    translateX: -50,
+                    translateY: -40,
+                    itemWidth: 80,
+                    itemHeight: 20,
+                    itemTextColor: '#94a3b8',
+                    symbolSize: 12,
+                    symbolShape: 'circle',
+                    effects: [
+                        {
+                            on: 'hover',
+                            style: {
+                                itemTextColor: '#f1f5f9'
                             }
-                        ]}
-                        theme={theme}
-                    />
+                        }
+                    ]
+                }
+            ]}
+            theme={theme}
+        />
+    );
+
+    return (
+        <>
+            <Card className="h-full" ref={cardRef}>
+                <CardHeader className="flex flex-row items-center justify-between">
+                    <CardTitle>
+                        <EditableText value={title} onChange={onTitleChange} />
+                    </CardTitle>
+                    <div className="flex gap-2">
+                        <Button variant="ghost" size="icon" onClick={() => setIsExpanded(true)} title="Expand" className="export-exclude">
+                            <Maximize2 className="w-4 h-4 text-slate-400" />
+                        </Button>
+                        <Button variant="ghost" size="icon" onClick={handleExport} title="Export as PNG" className="export-exclude">
+                            <Download className="w-4 h-4 text-slate-400" />
+                        </Button>
+                    </div>
+                </CardHeader>
+                <CardContent>
+                    <div className="h-[400px] w-full">
+                        {radarChart}
+                    </div>
+                </CardContent>
+            </Card>
+            <Modal isOpen={isExpanded} onClose={() => setIsExpanded(false)} title={title} size="xlarge">
+                <div style={{ height: '70vh' }}>
+                    {radarChart}
                 </div>
-            </CardContent>
-        </Card>
+            </Modal>
+        </>
     );
 };

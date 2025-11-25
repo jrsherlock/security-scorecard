@@ -174,7 +174,7 @@ function App() {
         </div>
 
         {/* Main Dashboard Area */}
-        <div className="flex-1 w-full space-y-6">
+        <div className="flex-1 w-full space-y-6 self-start">
           <div className="flex justify-end">
             <Button
               variant="ghost"
