@@ -16,7 +16,7 @@ import { exportToImage } from './utils/export';
 function App() {
   // State
   const [showControls, setShowControls] = useState(true);
-  const [selectedIndustry, setSelectedIndustry] = useState('healthcare');
+  const selectedIndustry = 'financial'; // Locked to Financial Services
   const [activeVisualization, setActiveVisualization] = useState('overview');
   const [chartStyle, setChartStyle] = useState('modern');
 
@@ -151,8 +151,6 @@ function App() {
         <div className={`transition-all duration-300 ${showControls ? 'w-80 opacity-100' : 'w-0 opacity-0 overflow-hidden'}`}>
           <Controls
             show={showControls}
-            selectedIndustry={selectedIndustry}
-            setSelectedIndustry={setSelectedIndustry}
             domainScores={domainScores}
             updateSubdomainScore={updateSubdomainScore}
             activeVisualization={activeVisualization}

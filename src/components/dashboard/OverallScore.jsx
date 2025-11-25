@@ -40,7 +40,7 @@ const GaugeChart = ({ value, size = 200 }) => {
             </svg>
             <div className="absolute inset-0 flex flex-col items-center justify-center">
                 <span className="text-4xl font-bold text-slate-900 dark:text-white">{Math.round(value)}</span>
-                <span className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider mt-1">Score</span>
+                <span className="text-xs text-slate-600 dark:text-slate-400 uppercase tracking-wider mt-1">Score</span>
             </div>
         </div>
     );
@@ -81,7 +81,7 @@ export const OverallScore = ({ score, maturityLevel, industryBenchmark, domainSc
                                     <EditableText value={title} onChange={onTitleChange} />
                                 </h2>
                                 <div className="flex items-center gap-3">
-                                    <span className="px-3 py-1 rounded-full text-sm font-medium bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700">
+                                    <span className="px-3 py-1 rounded-full text-sm font-medium bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-300 border border-slate-300 dark:border-slate-700">
                                         Level {maturityLevel.level}: {maturityLevel.name}
                                     </span>
                                     <span className={`text-sm font-medium ${score >= industryBenchmark.avg ? 'text-emerald-400' : 'text-red-400'}`}>
@@ -97,7 +97,7 @@ export const OverallScore = ({ score, maturityLevel, industryBenchmark, domainSc
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                             {Object.entries(domainScores).map(([key, domain]) => (
                                 <div key={key} className="p-4 rounded-xl bg-slate-100 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800/50 hover:border-slate-300 dark:hover:border-slate-700 transition-colors">
-                                    <div className="text-xs text-slate-600 dark:text-slate-400 mb-2 truncate" title={domain.name}>{domain.name.split('&')[0]}</div>
+                                    <div className="text-xs text-slate-700 dark:text-slate-400 mb-2 truncate" title={domain.name}>{domain.name.split('&')[0]}</div>
                                     <div className="flex items-end gap-2">
                                         <span className="text-xl font-bold text-slate-900 dark:text-white">{domain.score}</span>
                                         <div className="flex-1 h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full mb-1.5">

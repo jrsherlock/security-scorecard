@@ -5,7 +5,7 @@ export const Card = ({ className, children, ...props }) => {
     return (
         <div
             className={cn(
-                "bg-white dark:bg-slate-900/50 backdrop-blur-sm border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden shadow-sm dark:shadow-none",
+                "bg-white dark:bg-slate-900/50 backdrop-blur-sm border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden shadow-lg dark:shadow-none",
                 className
             )}
             {...props}

@@ -6,8 +6,6 @@ import { INDUSTRY_BENCHMARKS } from '../../data/constants';
 
 export const Controls = ({
     show,
-    selectedIndustry,
-    setSelectedIndustry,
     domainScores,
     updateSubdomainScore,
     activeVisualization,
@@ -28,7 +26,7 @@ export const Controls = ({
 
     return (
         <div className="w-80 flex-shrink-0 space-y-6">
-            <Card className="sticky top-24 border-slate-200 dark:border-slate-700/50 bg-white/80 dark:bg-slate-900/80">
+            <Card className="sticky top-24 border-slate-200 dark:border-slate-700/50 bg-white/95 dark:bg-slate-900/80 shadow-xl dark:shadow-none">
                 <CardHeader className="border-b border-slate-200 dark:border-slate-800">
                     <CardTitle className="flex items-center gap-2 text-base">
                         <Settings className="w-4 h-4 text-blue-600 dark:text-blue-400" />
@@ -36,22 +34,10 @@ export const Controls = ({
                     </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                    {/* Industry Selection */}
-                    <Select
-                        label="Industry Vertical"
-                        value={selectedIndustry}
-                        onChange={(e) => setSelectedIndustry(e.target.value)}
-                        options={Object.entries(INDUSTRY_BENCHMARKS).map(([key, val]) => ({
-                            value: key,
-                            label: val.name
-                        }))}
-                    />
-
-
 
                     {/* Visualization Selector */}
                     <div>
-                        <label className="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-2">View Mode</label>
+                        <label className="block text-xs font-medium text-slate-700 dark:text-slate-400 mb-2">View Mode</label>
                         <div className="grid grid-cols-2 gap-2">
                             {visualizations.map((vis) => (
                                 <button
@@ -71,20 +57,20 @@ export const Controls = ({
                     {/* Domain Score Adjusters */}
                     <div>
                         <div className="flex items-center gap-2 mb-3">
-                            <Sliders className="w-4 h-4 text-slate-600 dark:text-slate-400" />
-                            <label className="text-xs font-medium text-slate-600 dark:text-slate-400">Simulation Controls</label>
+                            <Sliders className="w-4 h-4 text-slate-700 dark:text-slate-400" />
+                            <label className="text-xs font-medium text-slate-700 dark:text-slate-400">Simulation Controls</label>
                         </div>
                         <div className="space-y-4 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
                             {Object.entries(domainScores).map(([key, domain]) => (
-                                <div key={key} className="space-y-3 p-3 bg-slate-100 dark:bg-slate-950/50 rounded-lg border border-slate-200 dark:border-slate-800">
+                                <div key={key} className="space-y-3 p-3 bg-slate-50 dark:bg-slate-950/50 rounded-lg border border-slate-200 dark:border-slate-800 shadow-sm dark:shadow-none">
                                     <div className="flex justify-between items-center">
-                                        <span className="text-xs font-semibold text-slate-700 dark:text-slate-300">{domain.name.split('&')[0]}</span>
+                                        <span className="text-xs font-semibold text-slate-800 dark:text-slate-300">{domain.name.split('&')[0]}</span>
                                         <span className="text-xs font-bold text-blue-600 dark:text-blue-400">{domain.score}%</span>
                                     </div>
                                     <div className="space-y-3">
                                         {Object.entries(domain.subdomains).map(([subKey, value]) => (
                                             <div key={subKey} className="space-y-1">
-                                                <div className="flex justify-between text-[10px] text-slate-600 dark:text-slate-500">
+                                                <div className="flex justify-between text-[10px] text-slate-700 dark:text-slate-500">
                                                     <span>{subKey.replace(/([A-Z])/g, ' $1').trim()}</span>
                                                     <span>{value}%</span>
                                                 </div>
