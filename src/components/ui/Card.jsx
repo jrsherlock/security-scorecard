@@ -5,7 +5,7 @@ export const Card = ({ className, children, ...props }) => {
     return (
         <div
             className={cn(
-                "bg-slate-900/50 backdrop-blur-sm border border-slate-800 rounded-xl overflow-hidden",
+                "bg-white dark:bg-slate-900/50 backdrop-blur-sm border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden shadow-sm dark:shadow-none",
                 className
             )}
             {...props}
@@ -25,7 +25,7 @@ export const CardHeader = ({ className, children, ...props }) => {
 
 export const CardTitle = ({ className, children, ...props }) => {
     return (
-        <h3 className={cn("text-lg font-semibold text-slate-100", className)} {...props}>
+        <h3 className={cn("text-lg font-semibold text-slate-900 dark:text-slate-100", className)} {...props}>
             {children}
         </h3>
     );

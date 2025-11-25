@@ -3,11 +3,11 @@ import { cn } from '../../utils/cn';
 
 export const Button = ({ className, variant = 'default', size = 'default', children, ...props }) => {
     const variants = {
-        default: 'bg-blue-600 text-white hover:bg-blue-700 shadow-lg shadow-blue-900/20',
-        outline: 'border border-slate-700 bg-transparent hover:bg-slate-800 text-slate-300',
-        ghost: 'hover:bg-slate-800 text-slate-400 hover:text-slate-100',
-        secondary: 'bg-slate-800 text-slate-100 hover:bg-slate-700',
-        danger: 'bg-red-500/10 text-red-400 hover:bg-red-500/20 border border-red-500/20',
+        default: 'bg-blue-600 dark:bg-blue-600 text-white hover:bg-blue-700 dark:hover:bg-blue-700 shadow-lg shadow-blue-900/20',
+        outline: 'border border-slate-300 dark:border-slate-700 bg-transparent hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300',
+        ghost: 'hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100',
+        secondary: 'bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-slate-100 hover:bg-slate-300 dark:hover:bg-slate-700',
+        danger: 'bg-red-500/10 text-red-600 dark:text-red-400 hover:bg-red-500/20 border border-red-500/20',
     };
 
     const sizes = {
