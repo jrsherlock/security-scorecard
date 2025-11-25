@@ -11,6 +11,7 @@ import { COLORS } from '../../data/constants';
 export const RadarAnalysis = ({ radarData, title, onTitleChange }) => {
     const cardRef = useRef(null);
     const [isExpanded, setIsExpanded] = React.useState(false);
+    const [hiddenSeries, setHiddenSeries] = React.useState([]);
 
     const handleExport = async () => {
         if (cardRef.current) {
@@ -28,6 +29,16 @@ export const RadarAnalysis = ({ radarData, title, onTitleChange }) => {
             }
         }
     };
+
+    const toggleSeries = (id) => {
+        setHiddenSeries(prev =>
+            prev.includes(id)
+                ? prev.filter(s => s !== id)
+                : [...prev, id]
+        );
+    };
+
+    const visibleKeys = ['score', 'benchmark', 'topPerformer'].filter(key => !hiddenSeries.includes(key));
 
     const theme = {
         axis: {
@@ -72,7 +83,7 @@ export const RadarAnalysis = ({ radarData, title, onTitleChange }) => {
     const radarChart = (
         <ResponsiveRadar
             data={radarData}
-            keys={['score', 'benchmark', 'topPerformer']}
+            keys={visibleKeys}
             indexBy="fullName"
             valueFormat=">-.2f"
             margin={{ top: 70, right: 80, bottom: 40, left: 80 }}
@@ -103,7 +114,10 @@ export const RadarAnalysis = ({ radarData, title, onTitleChange }) => {
                                 itemTextColor: '#f1f5f9'
                             }
                         }
-                    ]
+                    ],
+                    onClick: (datum) => {
+                        toggleSeries(datum.id);
+                    }
                 }
             ]}
             theme={theme}
