@@ -34,7 +34,7 @@ export const GapAnalysis = ({ gapData, title, onTitleChange }) => {
                         <EditableText value={title} onChange={onTitleChange} />
                     </CardTitle>
                     <div className="flex items-center gap-2">
-                        <span className="px-2 py-1 bg-red-500/10 text-red-400 text-xs font-medium rounded-full border border-red-500/20">
+                        <span className="px-2 py-1 bg-red-500/10 text-red-600 dark:text-red-400 text-xs font-medium rounded-full border border-red-500/20">
                             {criticalGaps.length} Critical
                         </span>
                     </div>
@@ -46,33 +46,33 @@ export const GapAnalysis = ({ gapData, title, onTitleChange }) => {
             <CardContent>
                 <div className="space-y-3 max-h-[500px] overflow-y-auto custom-scrollbar pr-2">
                     {gapData.map((item, i) => (
-                        <div key={i} className="flex items-center gap-4 p-4 rounded-lg bg-slate-900/40 border border-slate-800 hover:border-slate-700 transition-colors group">
-                            <div className={`p-2 rounded-lg ${item.priority === 'Critical' ? 'bg-red-500/10 text-red-400' :
-                                item.priority === 'High' ? 'bg-orange-500/10 text-orange-400' :
-                                    'bg-yellow-500/10 text-yellow-400'
+                        <div key={i} className="flex items-center gap-4 p-4 rounded-lg bg-slate-100 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 transition-colors group">
+                            <div className={`p-2 rounded-lg ${item.priority === 'Critical' ? 'bg-red-500/10 text-red-600 dark:text-red-400' :
+                                item.priority === 'High' ? 'bg-orange-500/10 text-orange-600 dark:text-orange-400' :
+                                    'bg-yellow-500/10 text-yellow-600 dark:text-yellow-400'
                                 }`}>
                                 <AlertTriangle className="w-5 h-5" />
                             </div>
 
                             <div className="flex-1 min-w-0">
                                 <div className="flex items-center justify-between mb-1">
-                                    <h4 className="text-sm font-medium text-slate-200 truncate">{item.capability}</h4>
-                                    <span className={`text-xs font-bold ${item.priority === 'Critical' ? 'text-red-400' :
-                                        item.priority === 'High' ? 'text-orange-400' : 'text-yellow-400'
+                                    <h4 className="text-sm font-medium text-slate-900 dark:text-slate-200 truncate">{item.capability}</h4>
+                                    <span className={`text-xs font-bold ${item.priority === 'Critical' ? 'text-red-600 dark:text-red-400' :
+                                        item.priority === 'High' ? 'text-orange-600 dark:text-orange-400' : 'text-yellow-600 dark:text-yellow-400'
                                         }`}>
                                         -{item.gap}% Gap
                                     </span>
                                 </div>
-                                <div className="flex items-center justify-between text-xs text-slate-500">
+                                <div className="flex items-center justify-between text-xs text-slate-600 dark:text-slate-500">
                                     <span>{item.domain}</span>
                                     <div className="flex items-center gap-2">
                                         <span>Current: {item.current}%</span>
                                         <span>Target: {item.target}%</span>
                                     </div>
                                 </div>
-                                <div className="mt-2 w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                                <div className="mt-2 w-full h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
                                     <div
-                                        className="h-full bg-slate-600 rounded-full"
+                                        className="h-full bg-slate-400 dark:bg-slate-600 rounded-full"
                                         style={{ width: `${item.current}%` }}
                                     />
                                 </div>
