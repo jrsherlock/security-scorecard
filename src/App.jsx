@@ -87,32 +87,7 @@ function App() {
   const updateDomainWeight = (domainKey, newWeight) => {
     setDomainScores(prev => {
       const newScores = { ...prev };
-      const oldWeight = newScores[domainKey].weight;
-      const weightDiff = newWeight - oldWeight;
-
-      // Update the target domain
-      newScores[domainKey].weight = newWeight;
-
-      // Calculate total weight of other domains
-      const otherDomains = Object.keys(newScores).filter(key => key !== domainKey);
-      const otherTotalWeight = otherDomains.reduce((sum, key) => sum + newScores[key].weight, 0);
-
-      // Distribute the difference proportionally among other domains
-      if (otherTotalWeight > 0) {
-        otherDomains.forEach(key => {
-          const proportion = newScores[key].weight / otherTotalWeight;
-          newScores[key].weight = Math.max(0, Math.round(newScores[key].weight - (weightDiff * proportion)));
-        });
-      }
-
-      // Ensure total is exactly 100% (handle rounding errors)
-      const total = Object.values(newScores).reduce((sum, domain) => sum + domain.weight, 0);
-      if (total !== 100) {
-        const adjustment = 100 - total;
-        const firstOtherDomain = otherDomains[0];
-        newScores[firstOtherDomain].weight += adjustment;
-      }
-
+      newScores[domainKey].weight = Math.max(0, Math.min(100, newWeight));
       return newScores;
     });
   };

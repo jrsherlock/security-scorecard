@@ -43,8 +43,8 @@ export const Controls = ({
                             <Scale className="w-4 h-4 text-slate-700 dark:text-slate-400" />
                             <label className="text-xs font-medium text-slate-700 dark:text-slate-400">Weight Rubric</label>
                             <span className={`ml-auto text-xs font-bold ${totalWeight === 100
-                                    ? 'text-emerald-600 dark:text-emerald-400'
-                                    : 'text-red-600 dark:text-red-400'
+                                ? 'text-emerald-600 dark:text-emerald-400'
+                                : 'text-red-600 dark:text-red-400'
                                 }`}>
                                 {totalWeight}%
                             </span>
@@ -52,22 +52,29 @@ export const Controls = ({
                         <div className="space-y-3">
                             {Object.entries(domainScores).map(([key, domain]) => (
                                 <div key={key} className="space-y-1">
-                                    <div className="flex justify-between text-xs">
-                                        <span className="text-slate-800 dark:text-slate-300 font-medium">
+                                    <div className="flex justify-between items-center gap-3">
+                                        <span className="text-xs text-slate-800 dark:text-slate-300 font-medium flex-1">
                                             {domain.name.split('&')[0].trim()}
                                         </span>
-                                        <span className="text-blue-600 dark:text-blue-400 font-bold">
-                                            {domain.weight}%
-                                        </span>
+                                        <div className="flex items-center gap-2">
+                                            <input
+                                                type="number"
+                                                min="0"
+                                                max="100"
+                                                value={domain.weight}
+                                                onChange={(e) => {
+                                                    const newValue = parseInt(e.target.value) || 0;
+                                                    updateDomainWeight(key, newValue);
+                                                }}
+                                                onBlur={(e) => {
+                                                    const newValue = Math.max(0, Math.min(100, parseInt(e.target.value) || 0));
+                                                    updateDomainWeight(key, newValue);
+                                                }}
+                                                className="w-16 px-2 py-1 text-xs font-bold text-blue-600 dark:text-blue-400 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-right"
+                                            />
+                                            <span className="text-xs text-slate-600 dark:text-slate-400">%</span>
+                                        </div>
                                     </div>
-                                    <input
-                                        type="range"
-                                        min="0"
-                                        max="100"
-                                        value={domain.weight}
-                                        onChange={(e) => updateDomainWeight(key, parseInt(e.target.value))}
-                                        className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500 hover:accent-blue-400"
-                                    />
                                 </div>
                             ))}
                         </div>
