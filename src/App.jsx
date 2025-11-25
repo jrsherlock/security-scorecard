@@ -175,17 +175,6 @@ function App() {
 
         {/* Main Dashboard Area */}
         <div className="flex-1 w-full space-y-6 self-start">
-          <div className="flex justify-end">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setShowControls(!showControls)}
-              className="text-slate-400"
-            >
-              <Settings2 className="w-4 h-4 mr-2" />
-              {showControls ? 'Hide Controls' : 'Show Controls'}
-            </Button>
-          </div>
 
           <OverallScore
             score={overallScore}

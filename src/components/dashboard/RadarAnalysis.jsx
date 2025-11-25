@@ -82,6 +82,7 @@ export const RadarAnalysis = ({ radarData, title, onTitleChange }) => {
             dotColor={{ theme: 'background' }}
             dotBorderWidth={2}
             colors={[COLORS.primary, COLORS.warning, COLORS.success]}
+            fillOpacity={0.25}
             blendMode="multiply"
             motionConfig="wobbly"
             legends={[
