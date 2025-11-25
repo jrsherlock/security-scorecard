@@ -4,7 +4,7 @@ import { Download } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { EditableText } from '../ui/EditableText';
-import { getScoreColor, getMaturityLevel } from '../../utils/helpers';
+import { getScoreColor, getMaturityLevel, formatLabel } from '../../utils/helpers';
 import { COLORS, MATURITY_LEVELS } from '../../data/constants';
 
 const Gauge = ({ value, size = 180, label }) => {
@@ -59,21 +59,21 @@ const Gauge = ({ value, size = 180, label }) => {
                         y1={size / 2}
                         x2={size / 2}
                         y2={size * 0.15}
-                        stroke="#e2e8f0"
+                        stroke="#64748b"
                         strokeWidth={2}
                         strokeLinecap="round"
                     />
-                    <circle cx={size / 2} cy={size / 2} r={4} fill="#e2e8f0" />
+                    <circle cx={size / 2} cy={size / 2} r={4} fill="#64748b" />
                 </g>
 
                 <text x={size / 2} y={size * 0.5} textAnchor="middle" className="text-2xl font-bold" fill={maturity.color}>
                     {Math.round(value)}
                 </text>
-                <text x={size / 2} y={size * 0.6} textAnchor="middle" className="text-xs fill-slate-500">
+                <text x={size / 2} y={size * 0.6} textAnchor="middle" className="text-xs fill-slate-600 dark:fill-slate-500">
                     {maturity.name}
                 </text>
             </svg>
-            <div className="text-sm font-medium text-slate-300 mt-1">{label}</div>
+            <div className="text-sm font-medium text-slate-800 dark:text-slate-300 mt-1">{label}</div>
         </div>
     );
 };
@@ -99,9 +99,9 @@ export const DomainGauges = ({ domainScores, title, onTitleChange }) => {
     };
 
     return (
-        <div ref={containerRef} className="bg-slate-950/50 p-4 rounded-xl border border-slate-800">
+        <div ref={containerRef} className="bg-white dark:bg-slate-950/50 p-4 rounded-xl border border-slate-200 dark:border-slate-800">
             <div className="flex items-center justify-between mb-6 px-2">
-                <h3 className="text-lg font-semibold text-slate-100">
+                <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
                     <EditableText value={title} onChange={onTitleChange} />
                 </h3>
                 <Button variant="ghost" size="icon" onClick={handleExport} title="Export as PNG" className="export-exclude">
@@ -110,16 +110,16 @@ export const DomainGauges = ({ domainScores, title, onTitleChange }) => {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {Object.entries(domainScores).map(([key, domain]) => (
-                    <Card key={key} className="bg-slate-900/40">
+                    <Card key={key} className="bg-slate-50 dark:bg-slate-900/40">
                         <CardContent className="p-6 flex flex-col items-center">
                             <Gauge value={domain.score} label={domain.name} />
                             <div className="w-full mt-6 space-y-3">
                                 {Object.entries(domain.subdomains).map(([subKey, value]) => (
                                     <div key={subKey} className="flex items-center gap-3">
-                                        <span className="text-xs text-slate-400 w-32 truncate">
-                                            {subKey.replace(/([A-Z])/g, ' $1').trim()}
+                                        <span className="text-xs text-slate-700 dark:text-slate-400 w-32 truncate">
+                                            {formatLabel(subKey)}
                                         </span>
-                                        <div className="flex-1 h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                                        <div className="flex-1 h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
                                             <div
                                                 className="h-full rounded-full transition-all duration-500"
                                                 style={{
@@ -128,7 +128,7 @@ export const DomainGauges = ({ domainScores, title, onTitleChange }) => {
                                                 }}
                                             />
                                         </div>
-                                        <span className="text-xs font-medium text-slate-300 w-8 text-right">{value}%</span>
+                                        <span className="text-xs font-medium text-slate-800 dark:text-slate-300 w-8 text-right">{value}%</span>
                                     </div>
                                 ))}
                             </div>

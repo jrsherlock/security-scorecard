@@ -11,3 +11,17 @@ export const getScoreColor = (score) => {
     if (score >= 20) return '#F97316';
     return COLORS.danger;
 };
+
+// Format labels: acronyms in all caps, regular words capitalized
+export const formatLabel = (label) => {
+    const acronyms = ['mttr', 'siem', 'edr', 'ml', 'cspm', 'iam', 'vm'];
+    const words = label.replace(/([A-Z])/g, ' $1').trim().split(' ');
+
+    return words.map(word => {
+        const lower = word.toLowerCase();
+        if (acronyms.includes(lower)) {
+            return lower.toUpperCase();
+        }
+        return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+    }).join(' ');
+};
