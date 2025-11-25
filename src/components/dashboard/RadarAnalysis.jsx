@@ -82,7 +82,7 @@ export const RadarAnalysis = ({ radarData, title, onTitleChange }) => {
             dotColor={{ theme: 'background' }}
             dotBorderWidth={2}
             colors={[COLORS.primary, COLORS.warning, COLORS.success]}
-            fillOpacity={0.25}
+            fillOpacity={0.4}
             blendMode="multiply"
             motionConfig="wobbly"
             legends={[
@@ -133,7 +133,7 @@ export const RadarAnalysis = ({ radarData, title, onTitleChange }) => {
                 </CardContent>
             </Card>
             <Modal isOpen={isExpanded} onClose={() => setIsExpanded(false)} title={title} size="xlarge">
-                <div style={{ height: '70vh' }}>
+                <div style={{ height: '70vh', backgroundColor: '#0f172a', borderRadius: '8px', padding: '16px' }}>
                     {radarChart}
                 </div>
             </Modal>
