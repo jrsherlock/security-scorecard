@@ -21,7 +21,7 @@ const GaugeChart = ({ value, size = 200 }) => {
                     cy="50%"
                     r={radius}
                     fill="none"
-                    stroke="#1e293b"
+                    stroke="#e2e8f0"
                     strokeWidth="12"
                 />
                 {/* Progress Circle */}
@@ -39,8 +39,8 @@ const GaugeChart = ({ value, size = 200 }) => {
                 />
             </svg>
             <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="text-4xl font-bold text-white">{Math.round(value)}</span>
-                <span className="text-xs text-slate-400 uppercase tracking-wider mt-1">Score</span>
+                <span className="text-4xl font-bold text-slate-900 dark:text-white">{Math.round(value)}</span>
+                <span className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider mt-1">Score</span>
             </div>
         </div>
     );
@@ -67,7 +67,7 @@ export const OverallScore = ({ score, maturityLevel, industryBenchmark, domainSc
     };
 
     return (
-        <Card className="bg-gradient-to-br from-slate-900 via-slate-900 to-slate-800 border-slate-700" ref={cardRef}>
+        <Card className="bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:via-slate-900 dark:to-slate-800 border-slate-200 dark:border-slate-700" ref={cardRef}>
             <CardContent className="p-8">
                 <div className="flex flex-col md:flex-row items-center gap-8">
                     <div id="overall-gauge" className="flex-shrink-0">
@@ -77,11 +77,11 @@ export const OverallScore = ({ score, maturityLevel, industryBenchmark, domainSc
                     <div className="flex-1 w-full space-y-6">
                         <div className="flex justify-between items-start">
                             <div>
-                                <h2 className="text-2xl font-bold text-white mb-2">
+                                <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
                                     <EditableText value={title} onChange={onTitleChange} />
                                 </h2>
                                 <div className="flex items-center gap-3">
-                                    <span className="px-3 py-1 rounded-full text-sm font-medium bg-slate-800 text-slate-300 border border-slate-700">
+                                    <span className="px-3 py-1 rounded-full text-sm font-medium bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700">
                                         Level {maturityLevel.level}: {maturityLevel.name}
                                     </span>
                                     <span className={`text-sm font-medium ${score >= industryBenchmark.avg ? 'text-emerald-400' : 'text-red-400'}`}>
@@ -96,11 +96,11 @@ export const OverallScore = ({ score, maturityLevel, industryBenchmark, domainSc
 
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                             {Object.entries(domainScores).map(([key, domain]) => (
-                                <div key={key} className="p-4 rounded-xl bg-slate-950/50 border border-slate-800/50 hover:border-slate-700 transition-colors">
-                                    <div className="text-xs text-slate-400 mb-2 truncate" title={domain.name}>{domain.name.split('&')[0]}</div>
+                                <div key={key} className="p-4 rounded-xl bg-slate-100 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800/50 hover:border-slate-300 dark:hover:border-slate-700 transition-colors">
+                                    <div className="text-xs text-slate-600 dark:text-slate-400 mb-2 truncate" title={domain.name}>{domain.name.split('&')[0]}</div>
                                     <div className="flex items-end gap-2">
-                                        <span className="text-xl font-bold text-white">{domain.score}</span>
-                                        <div className="flex-1 h-1.5 bg-slate-800 rounded-full mb-1.5">
+                                        <span className="text-xl font-bold text-slate-900 dark:text-white">{domain.score}</span>
+                                        <div className="flex-1 h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full mb-1.5">
                                             <div
                                                 className="h-full rounded-full bg-blue-500 transition-all duration-500"
                                                 style={{ width: `${domain.score}%`, backgroundColor: getScoreColor(domain.score) }}

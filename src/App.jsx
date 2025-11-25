@@ -17,7 +17,6 @@ function App() {
   // State
   const [showControls, setShowControls] = useState(true);
   const [selectedIndustry, setSelectedIndustry] = useState('healthcare');
-  const [companySize, setCompanySize] = useState('mid-market');
   const [activeVisualization, setActiveVisualization] = useState('overview');
   const [chartStyle, setChartStyle] = useState('modern');
 
@@ -154,8 +153,6 @@ function App() {
             show={showControls}
             selectedIndustry={selectedIndustry}
             setSelectedIndustry={setSelectedIndustry}
-            companySize={companySize}
-            setCompanySize={setCompanySize}
             domainScores={domainScores}
             updateSubdomainScore={updateSubdomainScore}
             activeVisualization={activeVisualization}
