@@ -41,18 +41,16 @@ export const BenchmarkComparison = ({ barData, title, onTitleChange }) => {
                     width={100}
                 />
                 <Tooltip
-                    contentStyle={{
-                        backgroundColor: '#0f172a',
-                        border: '1px solid #1e293b',
-                        borderRadius: '8px',
-                        color: '#f1f5f9'
-                    }}
+                    cursor={{ fill: '#1e293b', opacity: 0.5 }}
+                    contentStyle={{ backgroundColor: '#0f172a', border: '1px solid #1e293b', borderRadius: '8px', color: '#f1f5f9' }}
+                    itemStyle={{ color: '#f1f5f9' }}
                 />
-                <Bar dataKey="value" radius={[0, 8, 8, 0]}>
+                <Bar dataKey="score" name="Your Score" radius={[0, 4, 4, 0]} barSize={20}>
                     {barData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.fill || COLORS.primary} />
+                        <Cell key={`cell-${index}`} fill={COLORS.primary} />
                     ))}
                 </Bar>
+                <Bar dataKey="industryAvg" name="Industry Avg" fill={COLORS.warning} radius={[0, 4, 4, 0]} barSize={20} opacity={0.6} />
             </BarChart>
         </ResponsiveContainer>
     );
