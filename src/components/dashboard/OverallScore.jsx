@@ -89,9 +89,8 @@ export const OverallScore = ({ score, maturityLevel, industryBenchmark, domainSc
                                     </span>
                                 </div>
                             </div>
-                            <Button variant="outline" size="sm" onClick={handleExport} className="export-exclude">
-                                <Download className="w-4 h-4 mr-2" />
-                                Export Report
+                            <Button variant="ghost" size="icon" onClick={handleExport} title="Export as PNG" className="export-exclude">
+                                <Download className="w-4 h-4 text-slate-400" />
                             </Button>
                         </div>
 
