@@ -23,6 +23,7 @@ function App() {
   const [domainScores, setDomainScores] = useState({
     visibility: {
       name: 'Visibility & Telemetry',
+      description: 'Logging, endpoint coverage, asset inventory, cloud visibility',
       weight: 30,
       score: 45,
       subdomains: {
@@ -34,6 +35,7 @@ function App() {
     },
     detection: {
       name: 'Detection & Analytics',
+      description: 'SIEM rules, EDR detection, ML analytics, alert fidelity',
       weight: 30,
       score: 65,
       subdomains: {
@@ -45,6 +47,7 @@ function App() {
     },
     response: {
       name: 'Response & Containment',
+      description: 'MTTR, playbooks, automation, containment coverage',
       weight: 25,
       score: 58,
       subdomains: {
@@ -56,6 +59,7 @@ function App() {
     },
     exposure: {
       name: 'Cloud, Identity & Vuln Mgmt',
+      description: 'CSPM, IAM hygiene, VM lifecycle, attack surface exposure',
       weight: 15,
       score: 32,
       subdomains: {
@@ -76,6 +80,39 @@ function App() {
       newScores[domain].score = Math.round(
         subdomainValues.reduce((a, b) => a + b, 0) / subdomainValues.length
       );
+      return newScores;
+    });
+  };
+
+  const updateDomainWeight = (domainKey, newWeight) => {
+    setDomainScores(prev => {
+      const newScores = { ...prev };
+      const oldWeight = newScores[domainKey].weight;
+      const weightDiff = newWeight - oldWeight;
+
+      // Update the target domain
+      newScores[domainKey].weight = newWeight;
+
+      // Calculate total weight of other domains
+      const otherDomains = Object.keys(newScores).filter(key => key !== domainKey);
+      const otherTotalWeight = otherDomains.reduce((sum, key) => sum + newScores[key].weight, 0);
+
+      // Distribute the difference proportionally among other domains
+      if (otherTotalWeight > 0) {
+        otherDomains.forEach(key => {
+          const proportion = newScores[key].weight / otherTotalWeight;
+          newScores[key].weight = Math.max(0, Math.round(newScores[key].weight - (weightDiff * proportion)));
+        });
+      }
+
+      // Ensure total is exactly 100% (handle rounding errors)
+      const total = Object.values(newScores).reduce((sum, domain) => sum + domain.weight, 0);
+      if (total !== 100) {
+        const adjustment = 100 - total;
+        const firstOtherDomain = otherDomains[0];
+        newScores[firstOtherDomain].weight += adjustment;
+      }
+
       return newScores;
     });
   };
@@ -153,6 +190,7 @@ function App() {
             show={showControls}
             domainScores={domainScores}
             updateSubdomainScore={updateSubdomainScore}
+            updateDomainWeight={updateDomainWeight}
             activeVisualization={activeVisualization}
             setActiveVisualization={setActiveVisualization}
             chartStyle={chartStyle}

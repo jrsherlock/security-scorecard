@@ -1,5 +1,5 @@
 import React from 'react';
-import { Settings, Sliders } from 'lucide-react';
+import { Settings, Sliders, Scale } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '../ui/Card';
 import { Select } from '../ui/Select';
 import { INDUSTRY_BENCHMARKS } from '../../data/constants';
@@ -8,6 +8,7 @@ export const Controls = ({
     show,
     domainScores,
     updateSubdomainScore,
+    updateDomainWeight,
     activeVisualization,
     setActiveVisualization,
     chartStyle,
@@ -24,6 +25,8 @@ export const Controls = ({
         { id: 'peers', label: 'Peer Comparison' }
     ];
 
+    const totalWeight = Object.values(domainScores).reduce((sum, domain) => sum + domain.weight, 0);
+
     return (
         <div className="w-80 flex-shrink-0 space-y-6">
             <Card className="sticky top-24 border-slate-200 dark:border-slate-700/50 bg-white/95 dark:bg-slate-900/80 shadow-xl dark:shadow-none">
@@ -34,6 +37,46 @@ export const Controls = ({
                     </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
+                    {/* Weight Rubric */}
+                    <div>
+                        <div className="flex items-center gap-2 mb-3">
+                            <Scale className="w-4 h-4 text-slate-700 dark:text-slate-400" />
+                            <label className="text-xs font-medium text-slate-700 dark:text-slate-400">Weight Rubric</label>
+                            <span className={`ml-auto text-xs font-bold ${totalWeight === 100
+                                    ? 'text-emerald-600 dark:text-emerald-400'
+                                    : 'text-red-600 dark:text-red-400'
+                                }`}>
+                                {totalWeight}%
+                            </span>
+                        </div>
+                        <div className="space-y-3">
+                            {Object.entries(domainScores).map(([key, domain]) => (
+                                <div key={key} className="space-y-1">
+                                    <div className="flex justify-between text-xs">
+                                        <span className="text-slate-800 dark:text-slate-300 font-medium">
+                                            {domain.name.split('&')[0].trim()}
+                                        </span>
+                                        <span className="text-blue-600 dark:text-blue-400 font-bold">
+                                            {domain.weight}%
+                                        </span>
+                                    </div>
+                                    <input
+                                        type="range"
+                                        min="0"
+                                        max="100"
+                                        value={domain.weight}
+                                        onChange={(e) => updateDomainWeight(key, parseInt(e.target.value))}
+                                        className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500 hover:accent-blue-400"
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                        {totalWeight !== 100 && (
+                            <p className="text-xs text-red-600 dark:text-red-400 mt-2">
+                                Weights must sum to 100%
+                            </p>
+                        )}
+                    </div>
 
                     {/* Visualization Selector */}
                     <div>
