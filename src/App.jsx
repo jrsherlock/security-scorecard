@@ -175,6 +175,18 @@ function App() {
 
         {/* Main Dashboard Area */}
         <div className="flex-1 w-full space-y-6 self-start">
+          {/* Toggle Configuration Panel Button */}
+          <div className="flex justify-end">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowControls(!showControls)}
+              className="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100"
+            >
+              <Settings2 className="w-4 h-4 mr-2" />
+              {showControls ? 'Hide Configuration' : 'Show Configuration'}
+            </Button>
+          </div>
 
           <OverallScore
             score={overallScore}
