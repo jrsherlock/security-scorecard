@@ -8,6 +8,7 @@ import { BenchmarkComparison } from './components/dashboard/BenchmarkComparison'
 import { GapAnalysis } from './components/dashboard/GapAnalysis';
 import { PeerComparison } from './components/dashboard/PeerComparison';
 import { Button } from './components/ui/Button';
+import { CustomerEngagement } from './components/dashboard/CustomerEngagement';
 import { Settings2 } from 'lucide-react';
 import { INDUSTRY_BENCHMARKS, COLORS } from './data/constants';
 import { getMaturityLevel } from './utils/helpers';
@@ -17,6 +18,10 @@ function App() {
   const [showControls, setShowControls] = useState(true);
   const [activeVisualization, setActiveVisualization] = useState('overview');
   const [chartStyle, setChartStyle] = useState('modern');
+
+  // Customer Engagement State
+  const [customerEngagementScore, setCustomerEngagementScore] = useState(75);
+  const [customerEngagementTitle, setCustomerEngagementTitle] = useState('Customer Engagement Score');
 
   // Company and Industry Settings
   const [companyName, setCompanyName] = useState('Your Company');
@@ -181,6 +186,8 @@ function App() {
             setIndustryName={setIndustryName}
             industryBenchmark={industryBenchmark}
             setIndustryBenchmark={setIndustryBenchmark}
+            customerEngagementScore={customerEngagementScore}
+            setCustomerEngagementScore={setCustomerEngagementScore}
           />
         </div>
 
@@ -208,6 +215,15 @@ function App() {
             title={customTitles.overall}
             onTitleChange={(t) => updateTitle('overall', t)}
           />
+
+          {/* Customer Engagement Tile */}
+          {activeVisualization === 'overview' && (
+            <CustomerEngagement
+              score={customerEngagementScore}
+              title={customerEngagementTitle}
+              onTitleChange={setCustomerEngagementTitle}
+            />
+          )}
 
           {/* Dynamic Visualization Area */}
           <div className="min-h-[500px]">

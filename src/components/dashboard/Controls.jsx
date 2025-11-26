@@ -12,7 +12,15 @@ export const Controls = ({
     activeVisualization,
     setActiveVisualization,
     chartStyle,
-    setChartStyle
+    setChartStyle,
+    companyName,
+    setCompanyName,
+    industryName,
+    setIndustryName,
+    industryBenchmark,
+    setIndustryBenchmark,
+    customerEngagementScore,
+    setCustomerEngagementScore
 }) => {
     if (!show) return null;
 
@@ -101,6 +109,110 @@ export const Controls = ({
                                     {vis.label}
                                 </button>
                             ))}
+                        </div>
+                    </div>
+
+                    {/* Company & Industry Settings */}
+                    <div>
+                        <label className="block text-xs font-medium text-slate-700 dark:text-slate-400 mb-3">Company & Industry</label>
+                        <div className="space-y-3">
+                            {/* Company Name */}
+                            <div>
+                                <label className="text-xs text-slate-600 dark:text-slate-500 mb-1 block">Company Name</label>
+                                <input
+                                    type="text"
+                                    value={companyName}
+                                    onChange={(e) => setCompanyName(e.target.value)}
+                                    className="w-full px-3 py-2 text-sm text-slate-900 dark:text-slate-100 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    placeholder="Your Company"
+                                />
+                            </div>
+
+                            {/* Industry Name */}
+                            <div>
+                                <label className="text-xs text-slate-600 dark:text-slate-500 mb-1 block">Industry Name</label>
+                                <input
+                                    type="text"
+                                    value={industryName}
+                                    onChange={(e) => setIndustryName(e.target.value)}
+                                    className="w-full px-3 py-2 text-sm text-slate-900 dark:text-slate-100 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    placeholder="e.g., Financial Services"
+                                />
+                            </div>
+
+                            {/* Industry Benchmarks */}
+                            <div>
+                                <label className="text-xs text-slate-600 dark:text-slate-500 mb-2 block">Industry Benchmarks (%)</label>
+                                <div className="space-y-2">
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-xs text-slate-700 dark:text-slate-400 w-24">Top 25%:</span>
+                                        <input
+                                            type="number"
+                                            min="0"
+                                            max="100"
+                                            value={industryBenchmark.top}
+                                            onChange={(e) => setIndustryBenchmark(prev => ({ ...prev, top: parseInt(e.target.value) || 0 }))}
+                                            className="flex-1 px-2 py-1 text-xs text-slate-900 dark:text-slate-100 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-right"
+                                        />
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-xs text-slate-700 dark:text-slate-400 w-24">Average:</span>
+                                        <input
+                                            type="number"
+                                            min="0"
+                                            max="100"
+                                            value={industryBenchmark.avg}
+                                            onChange={(e) => setIndustryBenchmark(prev => ({ ...prev, avg: parseInt(e.target.value) || 0 }))}
+                                            className="flex-1 px-2 py-1 text-xs text-slate-900 dark:text-slate-100 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-right"
+                                        />
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-xs text-slate-700 dark:text-slate-400 w-24">Bottom 25%:</span>
+                                        <input
+                                            type="number"
+                                            min="0"
+                                            max="100"
+                                            value={industryBenchmark.bottom}
+                                            onChange={(e) => setIndustryBenchmark(prev => ({ ...prev, bottom: parseInt(e.target.value) || 0 }))}
+                                            className="flex-1 px-2 py-1 text-xs text-slate-900 dark:text-slate-100 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-right"
+                                        />
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-xs text-slate-700 dark:text-slate-400 w-24">Top Performer:</span>
+                                        <input
+                                            type="number"
+                                            min="0"
+                                            max="100"
+                                            value={industryBenchmark.topPerformer}
+                                            onChange={(e) => setIndustryBenchmark(prev => ({ ...prev, topPerformer: parseInt(e.target.value) || 0 }))}
+                                            className="flex-1 px-2 py-1 text-xs text-slate-900 dark:text-slate-100 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-right"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Customer Engagement Score */}
+                            <div>
+                                <label className="text-xs text-slate-600 dark:text-slate-500 mb-1 block">Customer Engagement Score</label>
+                                <div className="flex items-center gap-3">
+                                    <input
+                                        type="range"
+                                        min="0"
+                                        max="100"
+                                        value={customerEngagementScore}
+                                        onChange={(e) => setCustomerEngagementScore(parseInt(e.target.value) || 0)}
+                                        className="flex-1 h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-600"
+                                    />
+                                    <input
+                                        type="number"
+                                        min="0"
+                                        max="100"
+                                        value={customerEngagementScore}
+                                        onChange={(e) => setCustomerEngagementScore(parseInt(e.target.value) || 0)}
+                                        className="w-16 px-2 py-1 text-xs font-bold text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-right"
+                                    />
+                                </div>
+                            </div>
                         </div>
                     </div>
 
