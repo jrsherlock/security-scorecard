@@ -14,11 +14,19 @@ import { getMaturityLevel } from './utils/helpers';
 import { exportToImage } from './utils/export';
 
 function App() {
-  // State
   const [showControls, setShowControls] = useState(true);
-  const selectedIndustry = 'financial'; // Locked to Financial Services
   const [activeVisualization, setActiveVisualization] = useState('overview');
   const [chartStyle, setChartStyle] = useState('modern');
+
+  // Company and Industry Settings
+  const [companyName, setCompanyName] = useState('Your Company');
+  const [industryName, setIndustryName] = useState('Financial Services');
+  const [industryBenchmark, setIndustryBenchmark] = useState({
+    avg: 71,
+    top: 92,
+    bottom: 55,
+    topPerformer: 95
+  });
 
   const [domainScores, setDomainScores] = useState({
     visibility: {
@@ -35,30 +43,28 @@ function App() {
     },
     detection: {
       name: 'Detection & Analytics',
-      description: 'SIEM rules, EDR detection, ML analytics, alert fidelity',
+      description: 'SIEM rules, EDR detection, alert fidelity',
       weight: 30,
       score: 65,
       subdomains: {
         siemRules: 78,
         edrDetection: 82,
-        mlAnalytics: 45,
         alertFidelity: 55
       }
     },
     response: {
       name: 'Response & Containment',
-      description: 'MTTR, playbooks, automation, containment coverage',
+      description: 'MTTD, MTTR, automation',
       weight: 25,
       score: 58,
       subdomains: {
+        mttd: 60,
         mttr: 52,
-        playbooks: 65,
-        automation: 48,
-        containment: 67
+        automation: 48
       }
     },
     exposure: {
-      name: 'Cloud, Identity & Vuln Mgmt',
+      name: 'Cloud, Identity, and Vulnerability Exposure Management',
       description: 'CSPM, IAM hygiene, VM lifecycle, attack surface exposure',
       weight: 15,
       score: 32,
@@ -102,22 +108,21 @@ function App() {
   }, [domainScores]);
 
   const maturityLevel = getMaturityLevel(overallScore);
-  const industryBenchmark = INDUSTRY_BENCHMARKS[selectedIndustry];
 
   const radarData = Object.entries(domainScores).map(([key, domain]) => ({
     domain: domain.name.split(' ')[0],
     fullName: domain.name,
     score: domain.score,
-    benchmark: INDUSTRY_BENCHMARKS[selectedIndustry].avg,
-    topPerformer: INDUSTRY_BENCHMARKS[selectedIndustry].top
+    benchmark: industryBenchmark.avg,
+    topPerformer: industryBenchmark.topPerformer
   }));
 
   const barData = Object.entries(domainScores).map(([key, domain]) => ({
     name: domain.name.split('&')[0].trim(),
     fullName: domain.name,
     score: domain.score,
-    industryAvg: INDUSTRY_BENCHMARKS[selectedIndustry].avg,
-    gap: Math.max(0, INDUSTRY_BENCHMARKS[selectedIndustry].avg - domain.score)
+    industryAvg: industryBenchmark.avg,
+    gap: Math.max(0, industryBenchmark.avg - domain.score)
   }));
 
   const gapAnalysisData = [];
@@ -136,7 +141,7 @@ function App() {
   gapAnalysisData.sort((a, b) => b.gap - a.gap);
 
   const peerData = [
-    { name: 'Your Company', score: overallScore, fill: COLORS.primary },
+    { name: companyName, score: overallScore, fill: COLORS.primary },
     { name: 'Industry Top 25%', score: industryBenchmark.top, fill: COLORS.success },
     { name: 'Industry Average', score: industryBenchmark.avg, fill: COLORS.warning },
     { name: 'Industry Bottom 25%', score: industryBenchmark.bottom, fill: COLORS.danger }
@@ -170,6 +175,12 @@ function App() {
             setActiveVisualization={setActiveVisualization}
             chartStyle={chartStyle}
             setChartStyle={setChartStyle}
+            companyName={companyName}
+            setCompanyName={setCompanyName}
+            industryName={industryName}
+            setIndustryName={setIndustryName}
+            industryBenchmark={industryBenchmark}
+            setIndustryBenchmark={setIndustryBenchmark}
           />
         </div>
 
@@ -219,7 +230,7 @@ function App() {
                 />
                 <PeerComparison
                   peerData={peerData}
-                  industryName={industryBenchmark.name}
+                  industryName={industryName}
                   title={customTitles.peers}
                   onTitleChange={(t) => updateTitle('peers', t)}
                 />
@@ -261,7 +272,7 @@ function App() {
             {activeVisualization === 'peers' && (
               <PeerComparison
                 peerData={peerData}
-                industryName={industryBenchmark.name}
+                industryName={industryName}
                 title={customTitles.peers}
                 onTitleChange={(t) => updateTitle('peers', t)}
               />
