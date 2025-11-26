@@ -6,10 +6,12 @@ import { Card, CardHeader, CardTitle, CardContent } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { EditableText } from '../ui/EditableText';
 import { Modal } from '../ui/Modal';
+import { useTheme } from '../../contexts/ThemeContext';
 import { COLORS } from '../../data/constants';
 
 export const RadarAnalysis = ({ radarData, title, onTitleChange }) => {
     const cardRef = useRef(null);
+    const { theme } = useTheme();
     const [isExpanded, setIsExpanded] = React.useState(false);
     const [hiddenSeries, setHiddenSeries] = React.useState([]);
 
@@ -17,7 +19,7 @@ export const RadarAnalysis = ({ radarData, title, onTitleChange }) => {
         if (cardRef.current) {
             try {
                 const dataUrl = await toPng(cardRef.current, {
-                    backgroundColor: '#0f172a',
+                    backgroundColor: theme === 'dark' ? '#0f172a' : '#ffffff',
                     filter: (node) => !node.classList?.contains('export-exclude')
                 });
                 const link = document.createElement('a');
@@ -40,17 +42,17 @@ export const RadarAnalysis = ({ radarData, title, onTitleChange }) => {
 
     const visibleKeys = ['score', 'benchmark', 'topPerformer'].filter(key => !hiddenSeries.includes(key));
 
-    const theme = {
+    const chartTheme = {
         axis: {
             ticks: {
                 text: {
-                    fill: '#94a3b8',
+                    fill: theme === 'dark' ? '#94a3b8' : '#64748b',
                     fontSize: 11
                 }
             },
             legend: {
                 text: {
-                    fill: '#cbd5e1',
+                    fill: theme === 'dark' ? '#cbd5e1' : '#475569',
                     fontSize: 12,
                     fontWeight: 600
                 }
@@ -58,70 +60,110 @@ export const RadarAnalysis = ({ radarData, title, onTitleChange }) => {
         },
         grid: {
             line: {
-                stroke: '#1e293b',
+                stroke: theme === 'dark' ? '#1e293b' : '#e2e8f0',
                 strokeWidth: 1
             }
         },
         legends: {
             text: {
-                fill: '#94a3b8',
+                fill: theme === 'dark' ? '#94a3b8' : '#64748b',
                 fontSize: 11
             }
         },
         tooltip: {
             container: {
-                background: '#0f172a',
-                color: '#f1f5f9',
+                background: theme === 'dark' ? '#0f172a' : '#ffffff',
+                color: theme === 'dark' ? '#f1f5f9' : '#0f172a',
                 fontSize: '12px',
                 borderRadius: '8px',
                 boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-                border: '1px solid #1e293b'
+                border: theme === 'dark' ? '1px solid #1e293b' : '1px solid #e2e8f0'
             }
         }
     };
 
+    // Custom legend with toggle functionality
+    const CustomLegend = ({ legends }) => (
+        <div style={{
+            position: 'absolute',
+            top: '20px',
+            left: '20px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '8px'
+        }}>
+            {[
+                { id: 'score', label: 'score', color: COLORS.primary },
+                { id: 'benchmark', label: 'benchmark', color: COLORS.warning },
+                { id: 'topPerformer', label: 'topPerformer', color: COLORS.success }
+            ].map(item => {
+                const isHidden = hiddenSeries.includes(item.id);
+                return (
+                    <div
+                        key={item.id}
+                        onClick={() => toggleSeries(item.id)}
+                        style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '8px',
+                            cursor: 'pointer',
+                            opacity: isHidden ? 0.4 : 1,
+                            textDecoration: isHidden ? 'line-through' : 'none',
+                            transition: 'opacity 0.2s'
+                        }}
+                    >
+                        <div style={{
+                            width: '12px',
+                            height: '12px',
+                            borderRadius: '50%',
+                            backgroundColor: item.color
+                        }} />
+                        <span style={{
+                            fontSize: '11px',
+                            color: theme === 'dark' ? '#94a3b8' : '#64748b'
+                        }}>
+                            {item.label}
+                        </span>
+                    </div>
+                );
+            })}
+        </div>
+    );
+
     const radarChart = (
-        <ResponsiveRadar
-            data={radarData}
-            keys={visibleKeys}
-            indexBy="fullName"
-            valueFormat=">-.2f"
-            margin={{ top: 70, right: 80, bottom: 40, left: 80 }}
-            borderColor={{ from: 'color' }}
-            gridLabelOffset={36}
-            dotSize={10}
-            dotColor={{ theme: 'background' }}
-            dotBorderWidth={2}
-            colors={[COLORS.primary, COLORS.warning, COLORS.success]}
-            fillOpacity={0.4}
-            blendMode="multiply"
-            motionConfig="wobbly"
-            legends={[
-                {
-                    anchor: 'top-left',
-                    direction: 'column',
-                    translateX: -50,
-                    translateY: -40,
-                    itemWidth: 80,
-                    itemHeight: 20,
-                    itemTextColor: '#94a3b8',
-                    symbolSize: 12,
-                    symbolShape: 'circle',
-                    effects: [
-                        {
-                            on: 'hover',
-                            style: {
-                                itemTextColor: '#f1f5f9'
-                            }
-                        }
-                    ],
-                    onClick: (datum) => {
-                        toggleSeries(datum.id);
-                    }
-                }
-            ]}
-            theme={theme}
-        />
+        <div style={{ position: 'relative', height: '100%' }}>
+            <CustomLegend />
+            <ResponsiveRadar
+                data={radarData}
+                keys={visibleKeys}
+                indexBy="fullName"
+                valueFormat=">-.2f"
+                margin={{ top: 70, right: 80, bottom: 40, left: 80 }}
+                borderColor={{ from: 'color' }}
+                gridLabelOffset={36}
+                gridLevels={5}
+                gridShape="circular"
+                gridLabel={(props) => (
+                    <text
+                        {...props}
+                        style={{
+                            fill: theme === 'dark' ? '#94a3b8' : '#64748b',
+                            fontSize: 11
+                        }}
+                    >
+                        {props.id}
+                    </text>
+                )}
+                dotSize={10}
+                dotColor={{ theme: 'background' }}
+                dotBorderWidth={2}
+                colors={[COLORS.primary, COLORS.warning, COLORS.success]}
+                fillOpacity={0.4}
+                blendMode="multiply"
+                motionConfig="wobbly"
+                theme={chartTheme}
+            />
+        </div>
     );
 
     return (
@@ -147,7 +189,13 @@ export const RadarAnalysis = ({ radarData, title, onTitleChange }) => {
                 </CardContent>
             </Card>
             <Modal isOpen={isExpanded} onClose={() => setIsExpanded(false)} title={title} size="xlarge">
-                <div style={{ height: '70vh', backgroundColor: '#0f172a', borderRadius: '8px', padding: '16px' }}>
+                <div
+                    className="rounded-lg p-4"
+                    style={{
+                        height: '70vh',
+                        backgroundColor: theme === 'dark' ? '#0f172a' : '#ffffff'
+                    }}
+                >
                     {radarChart}
                 </div>
             </Modal>
